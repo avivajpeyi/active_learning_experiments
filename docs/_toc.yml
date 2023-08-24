@@ -3,7 +3,17 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: markdown
-- file: notebooks
-- file: markdown-notebooks
+parts:
+- caption:
+  chapters:
+  - file: notes
+  - file: al_and_gps
+  - file: code
+    sections:
+    - file: examples/gpax_gp_al
+    - file: examples/modal_gp_al
+    - file: examples/inference_with_active_learning
+    caption: COMPAS
+    - file: compas_al/*
+
+
