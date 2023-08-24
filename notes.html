@@ -1,0 +1,637 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Active learning notes &#8212; COMPAS-ML experiments</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notes';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bayesian Optimization for GPs" href="al_and_gps.html" />
+    <link rel="prev" title="Home" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">COMPAS-ML experiments</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Home
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Active learning notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="al_and_gps.html">Bayesian Optimization for GPs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Code examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="examples/gpax_gp_al.html">GPax and Active Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/inference_with_active_learning.html">AL for surrogate LnL (linear regression test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/modal_gp_al.html">modAL active learning with sklearn GP</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COMPAS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="compas_al/learning_curve.html">Learning Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/ml_training_and_inference.html">COMPAS ML LnL training and inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/pp_test.html">PP test</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/avivajpeyi/active_learning_experiments" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/avivajpeyi/active_learning_experiments/issues/new?title=Issue%20on%20page%20%2Fnotes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/notes.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Active learning notes</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#papers-on-active-learning">Papers on Active learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-algos">Methods/Algos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-estimate-uncertainty-in-deep-learning-networks">How to estimate uncertainty in Deep Learning networks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-active-learning">Bayesian active learning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gp-and-active-learning">GP and active learning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials-worksops">Tutorials/worksops</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codebases">Codebases</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="active-learning-notes">
+<h1>Active learning notes<a class="headerlink" href="#active-learning-notes" title="Permalink to this heading">#</a></h1>
+<section id="papers-on-active-learning">
+<h2>Papers on Active learning<a class="headerlink" href="#papers-on-active-learning" title="Permalink to this heading">#</a></h2>
+<section id="methods-algos">
+<h3>Methods/Algos<a class="headerlink" href="#methods-algos" title="Permalink to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>uncertainty-based sampling: least confident (<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/B978155860335650026X?via%3Dihub">Lewis and Catlett</a>), max margin and max entropy</p></li>
+<li><p>committee-based algorithms: vote entropy, consensus entropy and max disagreement (<a class="reference external" href="http://www.cs.northwestern.edu/~pardo/courses/mmml/papers/active_learning/improving_generalization_with_active_learning_ML94.pdf">Cohn et al.</a>)</p></li>
+<li><p>multilabel strategies: SVM binary minimum (<a class="reference external" href="https://link.springer.com/chapter/10.1007%2F3-540-31314-1_24">Brinker</a>), max loss, mean max loss, (<a class="reference external" href="http://dx.doi.org/10.1109/ICIP.2004.1421535">Li et al.</a>) MinConfidence, MeanConfidence, MinScore, MeanScore (<a class="reference external" href="http://dx.doi.org/10.1007/978-3-642-00958-7_12">Esuli and Sebastiani</a>)</p></li>
+<li><p>expected error reduction: binary and log loss (<a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.588.5666&amp;rep=rep1&amp;type=pdf">Roy and McCallum</a>)</p></li>
+<li><p>Bayesian optimization: probability of improvement, expected improvement and upper confidence bound (<a class="reference external" href="https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">Snoek et al.</a>)</p></li>
+<li><p>batch active learning: ranked batch-mode sampling (<a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0020025516313949">Cardoso et al.</a>)</p></li>
+<li><p>information density framework (<a class="reference external" href="http://www.kamalnigam.com/papers/emactive-icml98.pdf">McCallum and Nigam</a>)</p></li>
+<li><p>stream-based sampling (<a class="reference external" href="https://papers.nips.cc/paper/261-training-connectionist-networks-with-queries-and-selective-sampling.pdf">Atlas et al.</a>)</p></li>
+<li><p>active regression with max standard deviance sampling for Gaussian processes or ensemble regressors</p></li>
+</ol>
+</section>
+<section id="how-to-estimate-uncertainty-in-deep-learning-networks">
+<h3>How to estimate uncertainty in Deep Learning networks<a class="headerlink" href="#how-to-estimate-uncertainty-in-deep-learning-networks" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://icml.cc/virtual/2020/tutorial/5750">Excellent tutorial from AGW on Bayesian Deep Learning</a></p></li>
+<li><p>This tut is inspired by his publication <a class="reference external" href="https://arxiv.org/abs/2002.08791">Bayesian Deep Learning and a Probabilistic Perspective of Generalization</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/1506.02142.pdf">Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning</a> (Gal and Ghahramani, 2016) This describes Monte-Carlo Dropout, a way to estimate uncertainty through stochastic dropout at test time</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1802.06455">Bayesian Uncertainty Estimation for Batch Normalized Deep Networks</a> (Teye et al. 2018) This describes Monte-Carlo BatchNorm, a way to estimate uncertainty through random batch norm parameters at test time</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2002.08791">Bayesian Deep Learning and a Probabilistic Perspective of Generalization</a> (Gordon Wilson and Izmailov, 2020) Presentation of multi-SWAG a mix between VI and Ensembles.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/1711.05597.pdf">Advances in Variational inference</a> (Zhang et al, 2018)
+Gives a quick introduction to VI and the most recent advances.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1902.02476">A Simple Baseline for Bayesian Uncertainty in Deep Learning</a> (Maddox et al. 2019)
+Presents SWAG, an easy way to create ensembles.</p></li>
+</ul>
+</section>
+<section id="bayesian-active-learning">
+<h3>Bayesian active learning<a class="headerlink" href="#bayesian-active-learning" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://arxiv.org/pdf/1703.02910.pdf">Deep Bayesian Active Learning with Image Data</a> (Gal and Islam and Ghahramani, 2017) Fundamental paper on how to do Bayesian active learning.</p></li>
+<li><p><a class="reference external" href="http://cseweb.ucsd.edu/~dasgupta/papers/twoface.pdf">Sampling bias in active learning</a> (Dasgupta 2009) Presents sampling bias and how to solve it by combining heuristics and random selection.</p></li>
+<li><p><a class="reference external" href="https://arxiv.org/pdf/1112.5745.pdf">Bayesian Active Learning for Classification and Preference Learning</a> (Houlsby et al. 2011) Fundamental paper on one of the main heuristic BALD.</p></li>
+</ul>
+</section>
+<section id="gp-and-active-learning">
+<h3>GP and active learning<a class="headerlink" href="#gp-and-active-learning" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pubs.aip.org/aip/jap/article/128/16/164304/568362/Exploration-of-lattice-Hamiltonians-for-functional">Exploration of lattice Hamiltonians for functional and structural discovery via Gaussian process-based exploration–exploitation</a>
+<img alt="" src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*FwG-cE5ABw_KMUrkJ_o2vQ.jpeg" /></p></li>
+<li><p><a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00401706.2021.2008505">Active Learning for Deep Gaussian Process Surrogates</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/1911.09946">Actively learning GP dynamics</a></p></li>
+</ul>
+</section>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Review paper: <a class="reference external" href="https://arxiv.org/abs/2009.00236">https://arxiv.org/abs/2009.00236</a></p></li>
+<li><p>Book on Active learning: <a class="reference external" href="https://www.manning.com/books/human-in-the-loop-machine-learning">https://www.manning.com/books/human-in-the-loop-machine-learning</a></p></li>
+<li><p>“Towards Robust Deep Active Learning for Scientific Computing” <a class="reference external" href="https://arxiv.org/abs/2201.12632">https://arxiv.org/abs/2201.12632</a></p></li>
+<li><p>Deep bayesian active learning + image <a class="reference external" href="https://arxiv.org/abs/1703.02910">https://arxiv.org/abs/1703.02910</a></p></li>
+<li><p>A Comparative Survey of Deep Active Learning: <a class="reference external" href="https://arxiv.org/abs/2203.13450">https://arxiv.org/abs/2203.13450</a></p></li>
+</ul>
+</section>
+</section>
+<section id="tutorials-worksops">
+<h2>Tutorials/worksops<a class="headerlink" href="#tutorials-worksops" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/google/active-learning">Google’s Active Learning Playground</a>: This is a python module for experimenting with different active learning algorithms.</p></li>
+<li><p><a class="reference external" href="https://github.com/ej0cl6/deep-active-learning">deep-active-learning</a>: Python implementations of the following active learning algorithms</p></li>
+<li><p><a class="reference external" href="https://github.com/rmunro/pytorch_active_learning">PyTorch Active Learning</a>: Library for common Active Learning methods</p></li>
+<li><p><a class="reference external" href="https://github.com/Azure/active-learning-workshop">active-learning-workshop</a>:KDD 2018 Hands-on Tutorial: Active learning and transfer learning at scale with R and Python. <a class="reference external" href="https://github.com/Azure/active-learning-workshop/blob/master/active_learning_workshop.pdf">PDF</a></p></li>
+</ul>
+</section>
+<section id="codebases">
+<h2>Codebases<a class="headerlink" href="#codebases" title="Permalink to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Modal</p></li>
+</ol>
+<p>Built on scipy+sklearn
+<a class="github reference external" href="https://github.com/modAL-python/modAL">modAL-python/modAL</a></p>
+<ol class="arabic simple" start="2">
+<li><p>gpax</p></li>
+</ol>
+<p>Gaussian processes + active learning!
+Very new, uses JAX ❤️ + numpyro
+Problem: unstable/</p>
+<p><a class="github reference external" href="https://github.com/ziatdinovmax/gpax/">ziatdinovmax/gpax</a></p>
+<ol class="arabic simple" start="3">
+<li><p>Scikit-activeml
+<a class="reference external" href="https://www.preprints.org/manuscript/202103.0194/v1">https://www.preprints.org/manuscript/202103.0194/v1</a>
+<a class="reference external" href="https://pypi.org/project/scikit-activeml/">https://pypi.org/project/scikit-activeml/</a></p></li>
+</ol>
+<p>Also built on scipy+sklearn</p>
+<ol class="arabic simple" start="3">
+<li><p>Baal</p></li>
+</ol>
+<p>A ” Bayesian active learning library”
+Built on pytorch
+Seems like focus on images
+<a class="reference external" href="https://baal.readthedocs.io/en/latest/notebooks/compatibility/sklearn_tutorial/">https://baal.readthedocs.io/en/latest/notebooks/compatibility/sklearn_tutorial/</a>
+<a class="reference external" href="https://baal.readthedocs.io/en/latest/">https://baal.readthedocs.io/en/latest/</a>
+<a class="reference external" href="https://arxiv.org/abs/2006.09916">https://arxiv.org/abs/2006.09916</a></p>
+<ol class="arabic simple" start="4">
+<li><p>DeepAL
+<a class="github reference external" href="https://github.com/ej0cl6/deep-active-learning">ej0cl6/deep-active-learning</a></p></li>
+<li><p>adaptive</p></li>
+</ol>
+<p>Adaptive sampling technique for ‘learning’ functional representation of the data
+<a class="reference external" href="https://adaptive.readthedocs.io/en/latest/index.html">https://adaptive.readthedocs.io/en/latest/index.html</a>
+<video src="https://adaptive.readthedocs.io/en/latest/_static/logo_docs.webm" title=""><a href="https://adaptive.readthedocs.io/en/latest/_static/logo_docs.webm"></a></video>
+<a class="github reference external" href="https://github.com/python-adaptive/adaptive/tree/v1.0.0">python-adaptive/adaptive</a></p>
+<ol class="arabic simple" start="6">
+<li><p>AliPy
+Agnostic of pytorch/sklearn/tflow
+<a class="github reference external" href="https://github.com/NUAA-AL/alipy">NUAA-AL/alipy</a></p></li>
+<li><p>libact
+Features the <a class="reference external" href="http://www.csie.ntu.edu.tw/~htlin/paper/doc/aaai15albl.pdf">active learning by learning</a> meta-strategy that allows the machine to automatically learn the best strategy on the fly.</p></li>
+</ol>
+<p>Works with sklearn</p>
+<p>Hasnt been updated in 2 years
+<a class="github reference external" href="https://github.com/ntucllab/libact">ntucllab/libact</a></p>
+<ol class="arabic simple" start="8">
+<li><p>botorch
+A bayesian optimization framework built on pytorch
+<a class="reference external" href="https://botorch.org/">https://botorch.org/</a></p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Home</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="al_and_gps.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bayesian Optimization for GPs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#papers-on-active-learning">Papers on Active learning</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-algos">Methods/Algos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-estimate-uncertainty-in-deep-learning-networks">How to estimate uncertainty in Deep Learning networks</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-active-learning">Bayesian active learning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gp-and-active-learning">GP and active learning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorials-worksops">Tutorials/worksops</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codebases">Codebases</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Avi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

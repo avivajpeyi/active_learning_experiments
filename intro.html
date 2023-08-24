@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to your Jupyter Book &#8212; AL Experiments</title>
+    <title>Home &#8212; COMPAS-ML experiments</title>
   
   
   
@@ -64,7 +64,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Markdown Files" href="markdown.html" />
+    <link rel="next" title="Active learning notes" href="notes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -136,7 +136,7 @@ const thebe_selector_output = ".output, .cell_output"
   
   
   
-    <p class="title logo__title">AL Experiments</p>
+    <p class="title logo__title">COMPAS-ML experiments</p>
   
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
@@ -145,14 +145,25 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Welcome to your Jupyter Book
+                    Home
                 </a>
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes.html">Active learning notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="al_and_gps.html">Bayesian Optimization for GPs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Code examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="examples/gpax_gp_al.html">GPax and Active Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/inference_with_active_learning.html">AL for surrogate LnL (linear regression test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/modal_gp_al.html">modAL active learning with sklearn GP</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COMPAS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="compas_al/learning_curve.html">Learning Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/ml_training_and_inference.html">COMPAS ML LnL training and inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/pp_test.html">PP test</a></li>
 </ul>
 
     </div>
@@ -334,7 +345,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Welcome to your Jupyter Book</h1>
+    <h1>Home</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -348,18 +359,30 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-your-jupyter-book">
-<h1>Welcome to your Jupyter Book<a class="headerlink" href="#welcome-to-your-jupyter-book" title="Permalink to this heading">#</a></h1>
-<p>This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out <a class="reference external" href="https://jupyterbook.org">the Jupyter Book documentation</a> for more information.</p>
-<p>Check out the content pages bundled with this sample book to see more.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="home">
+<h1>Home<a class="headerlink" href="#home" title="Permalink to this heading">#</a></h1>
+<p>This contains a few active learning experiments and notes
+while working on the COMPAS active ML + quaisr project.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks.html">Content with notebooks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notes.html">Active learning notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="al_and_gps.html">Bayesian Optimization for GPs</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Code examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/gpax_gp_al.html">GPax and Active Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/inference_with_active_learning.html">AL for surrogate LnL (linear regression test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/modal_gp_al.html">modAL active learning with sklearn GP</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COMPAS</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/learning_curve.html">Learning Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/ml_training_and_inference.html">COMPAS ML LnL training and inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compas_al/pp_test.html">PP test</a></li>
 </ul>
 </div>
 </section>
@@ -396,11 +419,11 @@ It does not go in-depth into any particular topic - check out <a class="referenc
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="right-next"
-       href="markdown.html"
+       href="notes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Markdown Files</p>
+        <p class="prev-next-title">Active learning notes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

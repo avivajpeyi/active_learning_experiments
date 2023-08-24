@@ -1,0 +1,824 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>AL for surrogate LnL (linear regression test) &#8212; COMPAS-ML experiments</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/inference_with_active_learning';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="modAL active learning with sklearn GP" href="modal_gp_al.html" />
+    <link rel="prev" title="GPax and Active Learning" href="gpax_gp_al.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">COMPAS-ML experiments</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Home
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notes.html">Active learning notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../al_and_gps.html">Bayesian Optimization for GPs</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Code examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="gpax_gp_al.html">GPax and Active Learning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">AL for surrogate LnL (linear regression test)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modal_gp_al.html">modAL active learning with sklearn GP</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">COMPAS</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../compas_al/learning_curve.html">Learning Curve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compas_al/ml_training_and_inference.html">COMPAS ML LnL training and inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../compas_al/pp_test.html">PP test</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/avivajpeyi/active_learning_experiments" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/avivajpeyi/active_learning_experiments/issues/new?title=Issue%20on%20page%20%2Fexamples/inference_with_active_learning.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/inference_with_active_learning.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>AL for surrogate LnL (linear regression test)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="al-for-surrogate-lnl-linear-regression-test">
+<h1>AL for surrogate LnL (linear regression test)<a class="headerlink" href="#al-for-surrogate-lnl-linear-regression-test" title="Permalink to this heading">#</a></h1>
+<p>Test to run inference on some line data with a surrogate lnl likelihood trained on the line data’s Gaussian Likelihood</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython2 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">bilby</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">compas_surrogate.surrogate.models</span> <span class="kn">import</span> <span class="n">SklearnGPModel</span>
+<span class="kn">from</span> <span class="nn">compas_surrogate.surrogate.surrogate_likelihood</span> <span class="kn">import</span> <span class="n">SurrogateLikelihood</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">SIGMA</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">M_RANGE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">C_RANGE</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">OUTDIR</span> <span class="o">=</span> <span class="s2">&quot;out_inference_run&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">get_priors</span><span class="p">():</span>
+    <span class="n">priors</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">*</span><span class="n">M_RANGE</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>
+    <span class="n">priors</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="o">*</span><span class="n">C_RANGE</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">PriorDict</span><span class="p">(</span><span class="n">priors</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_prior_samples_in_grid</span><span class="p">(</span><span class="n">n_grid_cells</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">M_RANGE</span><span class="p">,</span> <span class="n">n_grid_cells</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">C_RANGE</span><span class="p">,</span> <span class="n">n_grid_cells</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+
+<span class="k">def</span> <span class="nf">generate_observed_data</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">func_kwargs</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">func_kwargs</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">get_likelihood_fn</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">obs_y_data</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">likelihood</span><span class="o">.</span><span class="n">GaussianLikelihood</span><span class="p">(</span>
+        <span class="n">x_data</span><span class="p">,</span> <span class="n">obs_y_data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_likelihood_surrogate</span><span class="p">(</span><span class="n">lnl</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">bilby</span><span class="o">.</span><span class="n">likelihood</span><span class="o">.</span><span class="n">Likelihood</span><span class="p">:</span>
+    <span class="n">model_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/surr_model&quot;</span>
+    <span class="k">if</span> <span class="n">clean</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">model_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training surrogate model&quot;</span><span class="p">)</span>
+        <span class="n">mc_samples</span> <span class="o">=</span> <span class="n">get_prior_samples_in_grid</span><span class="p">(</span><span class="n">n_grid_cells</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">lnl</span> <span class="o">=</span> <span class="n">generate_lnl_data</span><span class="p">(</span><span class="n">lnl</span><span class="p">,</span> <span class="n">mc_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mc_samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">lnl</span> <span class="o">=</span> <span class="n">lnl</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">SklearnGPModel</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">mc_samples</span><span class="p">,</span> <span class="n">lnl</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Surrogate model saved&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">SklearnGPModel</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+
+    <span class="n">likelihood</span> <span class="o">=</span> <span class="n">SurrogateLikelihood</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">likelihood</span>
+
+
+<span class="k">def</span> <span class="nf">generate_lnl_data</span><span class="p">(</span><span class="n">lnl</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">lnl_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">lnl</span><span class="p">,</span> <span class="n">SurrogateLikelihood</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">lnl_vals</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">lnl</span><span class="o">.</span><span class="n">surr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="n">lnl_vals</span> <span class="o">=</span> <span class="n">lnl_vals</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">m_i</span><span class="p">,</span> <span class="n">c_i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)):</span>
+            <span class="n">lnl</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m_i</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c_i</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">:</span> <span class="n">SIGMA</span><span class="p">}</span>
+            <span class="n">lnl_vals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">lnl</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">lnl_vals</span>
+
+
+<span class="k">def</span> <span class="nf">plot_lnl_surface</span><span class="p">(</span>
+    <span class="n">lnl</span><span class="p">,</span>
+    <span class="n">true_vals</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span>
+    <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">savefn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">kwgs</span><span class="o">=</span><span class="p">{},</span>
+<span class="p">):</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">get_prior_samples_in_grid</span><span class="p">(</span><span class="n">n_grid_cells</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">samples</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">lnl_vals</span> <span class="o">=</span> <span class="n">generate_lnl_data</span><span class="p">(</span><span class="n">lnl</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="c1"># contour plot</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span>
+        <span class="n">cmap</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">cset</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="n">lnl_vals</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwgs</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;ls&quot;</span> <span class="ow">in</span> <span class="n">kwgs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cset</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="n">kwgs</span><span class="p">[</span><span class="s2">&quot;ls&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;lw&quot;</span> <span class="ow">in</span> <span class="n">kwgs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cset</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">set_linewidth</span><span class="p">(</span><span class="n">kwgs</span><span class="p">[</span><span class="s2">&quot;lw&quot;</span><span class="p">])</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">M_RANGE</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">*</span><span class="n">C_RANGE</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">savefn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">true_vals</span><span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">true_vals</span><span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;LnL Contours&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savefn</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span> <span class="nf">plot_corner</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">bilby</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">Result</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">savefn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">plot_corner</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">plot_corner</span><span class="p">(</span><span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">savefn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savefn</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span> <span class="nf">plot_posterior_predictive_check</span><span class="p">(</span>
+    <span class="n">obs</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">,</span>
+    <span class="n">posterior</span><span class="p">,</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+    <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">savefn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="c1"># take 100 random samples from the posterior</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">post</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">post</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+    <span class="n">y_low</span><span class="p">,</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_axes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_mean</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_low</span><span class="p">,</span> <span class="n">y_up</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">savefn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Posterior predictive check&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">savefn</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span> <span class="nf">test_inference_run</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="n">c</span>
+    <span class="n">true_parameters</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">obs_data</span> <span class="o">=</span> <span class="n">generate_observed_data</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">true_parameters</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">prior</span> <span class="o">=</span> <span class="n">get_priors</span><span class="p">()</span>
+
+    <span class="n">true_lnl</span> <span class="o">=</span> <span class="n">get_likelihood_fn</span><span class="p">(</span><span class="n">obs_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obs_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">model</span><span class="p">)</span>
+    <span class="n">normal_result</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">run_sampler</span><span class="p">(</span>
+        <span class="n">likelihood</span><span class="o">=</span><span class="n">true_lnl</span><span class="p">,</span>
+        <span class="n">priors</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span>
+        <span class="n">sampler</span><span class="o">=</span><span class="s2">&quot;emcee&quot;</span><span class="p">,</span>
+        <span class="n">injection_parameters</span><span class="o">=</span><span class="n">true_parameters</span><span class="p">,</span>
+        <span class="n">nwalkers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="n">OUTDIR</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true_lnl&quot;</span><span class="p">,</span>
+        <span class="n">clean</span><span class="o">=</span><span class="n">clean</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">surrogate_lnl</span> <span class="o">=</span> <span class="n">get_likelihood_surrogate</span><span class="p">(</span><span class="n">true_lnl</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="n">clean</span><span class="p">)</span>
+    <span class="n">surr_result</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">run_sampler</span><span class="p">(</span>
+        <span class="n">likelihood</span><span class="o">=</span><span class="n">surrogate_lnl</span><span class="p">,</span>
+        <span class="n">priors</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span>
+        <span class="n">sampler</span><span class="o">=</span><span class="s2">&quot;emcee&quot;</span><span class="p">,</span>
+        <span class="n">injection_parameters</span><span class="o">=</span><span class="n">true_parameters</span><span class="p">,</span>
+        <span class="n">nwalkers</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="n">OUTDIR</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;surr_lnl&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">lnl_surf_fig</span> <span class="o">=</span> <span class="n">plot_lnl_surface</span><span class="p">(</span>
+        <span class="n">true_lnl</span><span class="p">,</span> <span class="n">true_parameters</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span>
+    <span class="p">)</span>
+    <span class="n">plot_lnl_surface</span><span class="p">(</span>
+        <span class="n">surrogate_lnl</span><span class="p">,</span>
+        <span class="n">true_parameters</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Reds&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;surrogate&quot;</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">lnl_surf_fig</span><span class="p">,</span>
+        <span class="n">savefn</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/lnl_surf.png&quot;</span><span class="p">,</span>
+        <span class="n">kwgs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ppc</span> <span class="o">=</span> <span class="n">plot_posterior_predictive_check</span><span class="p">(</span>
+        <span class="n">obs_data</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">normal_result</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Analytical&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:red&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plot_posterior_predictive_check</span><span class="p">(</span>
+        <span class="n">obs_data</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">,</span>
+        <span class="n">surr_result</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Surrogate&quot;</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">ppc</span><span class="p">,</span>
+        <span class="n">savefn</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/ppc.png&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">crner</span> <span class="o">=</span> <span class="n">plot_corner</span><span class="p">(</span><span class="n">normal_result</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:red&quot;</span><span class="p">)</span>
+    <span class="n">plot_corner</span><span class="p">(</span><span class="n">surr_result</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;tab:blue&quot;</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">crner</span><span class="p">,</span> <span class="n">savefn</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/corner.png&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">test_inference_run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+20:09 bilby INFO    : Analysis priors:
+20:09 bilby INFO    : m=Uniform(minimum=0, maximum=5, name=&#39;m&#39;, latex_label=&#39;m&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : c=Uniform(minimum=-2, maximum=2, name=&#39;c&#39;, latex_label=&#39;c&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : Analysis likelihood class: &lt;class &#39;bilby.core.likelihood.GaussianLikelihood&#39;&gt;
+20:09 bilby INFO    : Analysis likelihood noise evidence: nan
+20:09 bilby INFO    : Single likelihood evaluation took 7.495e-05 s
+20:09 bilby INFO    : Using sampler Emcee with kwargs {&#39;nwalkers&#39;: 50, &#39;a&#39;: 2, &#39;args&#39;: [], &#39;kwargs&#39;: {}, &#39;postargs&#39;: None, &#39;pool&#39;: None, &#39;live_dangerously&#39;: False, &#39;runtime_sortingfn&#39;: None, &#39;lnprob0&#39;: None, &#39;rstate0&#39;: None, &#39;blobs0&#39;: None, &#39;iterations&#39;: 100, &#39;thin&#39;: 1, &#39;storechain&#39;: True, &#39;mh_proposal&#39;: None}
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "ec741dec9a3642feb49b071d32740aea"}</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20:09 bilby INFO    : Checkpointing sampler to file out_inference_run/emcee_true_lnl/sampler.pickle
+20:09 bilby INFO    : Max autocorr time = 23
+20:09 bilby INFO    : Discarding 69 steps for burn-in
+20:09 bilby INFO    : Sampling time: 0:00:01.867138
+20:09 bilby INFO    : Summary of results:
+nsamples: 1550
+ln_noise_evidence:    nan
+ln_evidence:    nan +/-    nan
+ln_bayes_factor:    nan +/-    nan
+
+<span class=" -Color -Color-Green">2023-08-23 20:09:31.230</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">compas_surrogate.surrogate.models.model</span>:<span class=" -Color -Color-Cyan">_preprocess_and_split_data</span>:<span class=" -Color -Color-Cyan">112</span> - <span class=" -Color -Color-Bold">Training surrogate In((80, 2))--&gt;Out((80, 1)) [testing:20]</span>
+|<span class=" -Color -Color-Blue">COMPAS-SUR</span>|23/08 20:09:31|INFO| Training surrogate In((80, 2))--&gt;Out((80, 1)) [testing:20] 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training surrogate model
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20:09 bilby INFO    : Running for label &#39;surr_lnl&#39;, output will be saved to &#39;out_inference_run&#39;
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Surrogate model saved
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+20:09 bilby INFO    : Analysis priors:
+20:09 bilby INFO    : m=Uniform(minimum=0, maximum=5, name=&#39;m&#39;, latex_label=&#39;m&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : c=Uniform(minimum=-2, maximum=2, name=&#39;c&#39;, latex_label=&#39;c&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : Analysis likelihood class: &lt;class &#39;compas_surrogate.surrogate.surrogate_likelihood.SurrogateLikelihood&#39;&gt;
+20:09 bilby INFO    : Analysis likelihood noise evidence: nan
+20:09 bilby INFO    : Single likelihood evaluation took 3.864e-04 s
+20:09 bilby INFO    : Using sampler Emcee with kwargs {&#39;nwalkers&#39;: 50, &#39;a&#39;: 2, &#39;args&#39;: [], &#39;kwargs&#39;: {}, &#39;postargs&#39;: None, &#39;pool&#39;: None, &#39;live_dangerously&#39;: False, &#39;runtime_sortingfn&#39;: None, &#39;lnprob0&#39;: None, &#39;rstate0&#39;: None, &#39;blobs0&#39;: None, &#39;iterations&#39;: 100, &#39;thin&#39;: 1, &#39;storechain&#39;: True, &#39;mh_proposal&#39;: None}
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "655f990a2da544aab6a5b79bf7b230a7"}</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20:09 bilby INFO    : Checkpointing sampler to file out_inference_run/emcee_surr_lnl/sampler.pickle
+20:09 bilby INFO    : Max autocorr time = 20
+20:09 bilby INFO    : Discarding 60 steps for burn-in
+20:09 bilby INFO    : Sampling time: 0:00:03.123357
+20:09 bilby INFO    : Summary of results:
+nsamples: 2000
+ln_noise_evidence:    nan
+ln_evidence:    nan +/-    nan
+ln_bayes_factor:    nan +/-    nan
+</pre></div>
+</div>
+<img alt="../_images/3934c8607eb8a72396d603614d218bc0b049f347fc12d09e004a45f8da1f6ae5.png" src="../_images/3934c8607eb8a72396d603614d218bc0b049f347fc12d09e004a45f8da1f6ae5.png" />
+<img alt="../_images/f8ccb534fb253827951321b0db35a593a28ccf806931e6af9d5a0cdc9b69f696.png" src="../_images/f8ccb534fb253827951321b0db35a593a28ccf806931e6af9d5a0cdc9b69f696.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20:09 bilby INFO    : Running for label &#39;true_lnl&#39;, output will be saved to &#39;out_inference_run&#39;
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+20:09 bilby INFO    : Analysis priors:
+20:09 bilby INFO    : m=Uniform(minimum=0, maximum=5, name=&#39;m&#39;, latex_label=&#39;m&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : c=Uniform(minimum=-2, maximum=2, name=&#39;c&#39;, latex_label=&#39;c&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : Analysis likelihood class: &lt;class &#39;bilby.core.likelihood.GaussianLikelihood&#39;&gt;
+20:09 bilby INFO    : Analysis likelihood noise evidence: nan
+20:09 bilby INFO    : Single likelihood evaluation took 9.462e-05 s
+20:09 bilby WARNING : Using cached result
+20:09 bilby INFO    : Summary of results:
+nsamples: 1550
+ln_noise_evidence:    nan
+ln_evidence:    nan +/-    nan
+ln_bayes_factor:    nan +/-    nan
+
+20:09 bilby INFO    : Running for label &#39;surr_lnl&#39;, output will be saved to &#39;out_inference_run&#39;
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+<span class=" -Color -Color-Yellow">WARNING: Skipping /usr/local/lib/python3.11/site-packages/numpy-1.25.2-py3.11.egg-info due to invalid metadata entry &#39;name&#39;</span>
+20:09 bilby INFO    : Analysis priors:
+20:09 bilby INFO    : m=Uniform(minimum=0, maximum=5, name=&#39;m&#39;, latex_label=&#39;m&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : c=Uniform(minimum=-2, maximum=2, name=&#39;c&#39;, latex_label=&#39;c&#39;, unit=None, boundary=None)
+20:09 bilby INFO    : Analysis likelihood class: &lt;class &#39;compas_surrogate.surrogate.surrogate_likelihood.SurrogateLikelihood&#39;&gt;
+20:09 bilby INFO    : Analysis likelihood noise evidence: nan
+20:09 bilby INFO    : Single likelihood evaluation took 4.298e-04 s
+20:09 bilby WARNING : Using cached result
+20:09 bilby INFO    : Summary of results:
+nsamples: 2000
+ln_noise_evidence:    nan
+ln_evidence:    nan +/-    nan
+ln_bayes_factor:    nan +/-    nan
+</pre></div>
+</div>
+<img alt="../_images/3934c8607eb8a72396d603614d218bc0b049f347fc12d09e004a45f8da1f6ae5.png" src="../_images/3934c8607eb8a72396d603614d218bc0b049f347fc12d09e004a45f8da1f6ae5.png" />
+<img alt="../_images/b224c975e050265c2bcdd20e5f6a1f98842d00a37af0c551c7fff7ed0e593641.png" src="../_images/b224c975e050265c2bcdd20e5f6a1f98842d00a37af0c551c7fff7ed0e593641.png" />
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gpax_gp_al.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">GPax and Active Learning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="modal_gp_al.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">modAL active learning with sklearn GP</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Avi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
