@@ -4,16 +4,14 @@
 format: jb-book
 root: intro
 parts:
-- caption:
-  chapters:
-  - file: notes
-  - file: al_and_gps
-  - file: code
-    sections:
-    - file: examples/gpax_gp_al
-    - file: examples/modal_gp_al
-    - file: examples/inference_with_active_learning
-    caption: COMPAS
-    - file: compas_al/*
-
+  - caption:
+    chapters:
+    - file: notes
+    - file: al_and_gps
+  - caption: Code examples
+    chapters:
+    - glob: examples/*
+  - caption: COMPAS
+    chapters:
+    - glob: compas_al/*
 
